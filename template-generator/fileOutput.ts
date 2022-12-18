@@ -1,6 +1,7 @@
 import { ExecutionConfig, FileNameGenerator, Schema } from "../core";
 import { FileOutputHandler } from "./TemplateGenerator";
-import { writeFileSync } from "fs";
+import { writeFileSync, mkdirSync, existsSync } from "fs";
+import { join } from "path";
 
 const DEFAULT_FILE_NAME_GENERATOR: FileNameGenerator = ({ model }) =>
   `${model}.ts`;
@@ -18,6 +19,15 @@ export const handleFileOutputDefault: FileOutputHandler = (
         ? maybeGenerateFileName(schema)
         : maybeGenerateFileName;
 
-    writeFileSync(fileName, template);
+    const filePath = join(fileOptions.targetPath ?? "", fileName);
+
+    console.log({ fileName, filePath, fileOptions });
+
+    // ensure the path exists; if not, create the necessary directories
+    if (fileOptions.targetPath && !existsSync(fileOptions.targetPath)) {
+      mkdirSync(fileOptions.targetPath, { recursive: true });
+    }
+
+    writeFileSync(filePath, template);
   }
 };

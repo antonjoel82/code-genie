@@ -10,4 +10,8 @@ const testSchema: Schema = {
 
 const generator = new IndexFileGenerator();
 
-generator.execute(testSchema);
+generator.execute(testSchema, {
+  fileOptions: {
+    targetPath: "./foo/bar/wheres-my/car",
+  },
+});

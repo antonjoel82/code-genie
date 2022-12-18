@@ -1,15 +1,15 @@
-import { Schema, GenerationContext, ExecutionConfig } from "../core/constructs";
+import { Schema, ExecutionContext, ExecutionConfig } from "../core/constructs";
 import { handleFileOutputDefault } from "./fileOutput";
 
 export type ExecuteFunction = (
   schema: Schema,
-  context?: GenerationContext
+  context?: ExecutionContext
 ) => void;
 
 export type GenerateFunction = (
   schema: Schema,
   executionConfig?: ExecutionConfig,
-  context?: GenerationContext
+  context?: ExecutionContext
 ) => string;
 
 export type FileOutputHandler = (
@@ -18,10 +18,15 @@ export type FileOutputHandler = (
   template: string
 ) => void;
 
-// export interface TemplateGenerator {
-//   generate(schema: Schema, config: Config): string;
-//   // abstract handleFileOutput: FileOutputHandler = handleFileOutputDefault;
-// }
+const mergeExecutionConfigWithContext = (
+  executionConfig: ExecutionConfig,
+  context: ExecutionContext
+): ExecutionConfig => {
+  return {
+    ...executionConfig,
+    fileOptions: context.fileOptions,
+  };
+};
 
 export abstract class TemplateGenerator {
   constructor(private readonly executionConfig: ExecutionConfig = {}) {}
@@ -30,8 +35,15 @@ export abstract class TemplateGenerator {
 
   protected handleFileOutput: FileOutputHandler = handleFileOutputDefault;
   execute: ExecuteFunction = (schema, context) => {
-    const template = this.generate(schema, this.executionConfig, context);
-    this.handleFileOutput(schema, this.executionConfig, template);
+    const runtimeConfig = mergeExecutionConfigWithContext(
+      this.executionConfig,
+      context
+    );
+
+    console.log({ runtimeConfig });
+
+    const template = this.generate(schema, runtimeConfig, context);
+    this.handleFileOutput(schema, runtimeConfig, template);
   };
 }
 

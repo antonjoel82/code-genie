@@ -23,10 +23,11 @@ export interface FileOptions {
 }
 
 // export interface Config<TemplateGeneratorType extends string = string> extends BaseEntity {
-export interface GenerationContext extends BaseEntity {
+export interface ExecutionContext {
   name?: string;
   application?: string;
   scope?: string;
+  fileOptions?: FileOptions;
 }
 
 export interface ExecutionConfig extends BaseEntity {

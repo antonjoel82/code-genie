@@ -22,9 +22,13 @@ const mergeExecutionConfigWithContext = (
   executionConfig: ExecutionConfig,
   context: ExecutionContext
 ): ExecutionConfig => {
+  // console.log({ executionConfig, context });
   return {
     ...executionConfig,
-    fileOptions: context.fileOptions,
+    fileOptions: {
+      ...executionConfig.fileOptions,
+      ...context.fileOptions,
+    },
   };
 };
 

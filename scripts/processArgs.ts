@@ -6,7 +6,7 @@ const ALIASES: Record<string, string | string[]> = {
   path: ["p"],
   lang: ["l", "language"],
   spec: ["specialization"],
-  name: ["n", "model"],
+  name: ["n"],
 };
 
 const ALLOWED_UNLABELED_ARG = "name";
@@ -20,7 +20,17 @@ export interface ProcessedArgs {
   [key: string]: any;
 }
 
-export const processArgs = (argv: string[]): ProcessedArgs => {
+/**
+ * Parse a list of command-line arguments.
+ *
+ * @param argv list of arguments directly from process.argv.
+ * @param options TODO: currently a placeholder.
+ * @returns command-line arguments assembled into a look-up object
+ */
+export const processArgs = (
+  argv: string[],
+  options: {} = {}
+): ProcessedArgs => {
   const parsedArgs = minimist(argv.slice(FIRST_PARAM_INDEX), {
     alias: ALIASES,
   });

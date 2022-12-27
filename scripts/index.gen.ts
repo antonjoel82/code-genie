@@ -3,7 +3,7 @@
 import { argv, exit } from "process";
 
 import { Schema } from "../core";
-import { IndexFileGenerator } from "../example-generators/IndexFileGenerator";
+import { IndexExportGenerator } from "../example-generators/IndexExportGenerator";
 import { processArgs, ProcessedArgs } from "./processArgs";
 
 let argLookup: ProcessedArgs;
@@ -20,7 +20,7 @@ const testSchema: Schema = {
   modelPlural: model + "s",
 };
 
-const generator = new IndexFileGenerator();
+const generator = new IndexExportGenerator();
 
 generator.execute(testSchema, {
   fileOptions: {

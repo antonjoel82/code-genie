@@ -1,13 +1,15 @@
-import { Schema, ExecutionContext } from "../core";
+import { Schema, ExecutionContext, ExecutionConfig } from "../core";
 import { TemplateGenerator } from "../template-generator/TemplateGenerator";
 
-export class IndexFileGenerator extends TemplateGenerator {
+export class IndexExportGenerator extends TemplateGenerator {
   constructor() {
     super({
       shouldWriteFile: true,
       fileOptions: { fileName: "index.ts" },
     });
   }
+
+  // protected validateParams: (cfg: ExecutionConfig) => void;
 
   generate = ({ model }: Schema, _cfg: ExecutionContext) => {
     const template = `export * from "./${model}";\n`;

@@ -1,10 +1,9 @@
 #!/usr/bin/env ts-node
 
 import { argv, exit } from "process";
-
-import { Schema } from "../core";
-import { BasicJestFileGenerator } from "../example-generators/BasicJestFileGenerator";
-import { processArgs, ProcessedArgs } from "./processArgs";
+import { Schema } from "../../core";
+import { ProcessedArgs, processArgs } from "../../scripts/processArgs";
+import { BasicJestFileGenerator } from "../generators/BasicJestFileGenerator";
 
 let argLookup: ProcessedArgs;
 try {

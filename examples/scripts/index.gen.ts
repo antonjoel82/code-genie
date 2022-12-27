@@ -1,10 +1,9 @@
 #!/usr/bin/env ts-node
 
 import { argv, exit } from "process";
-
-import { Schema } from "../core";
-import { IndexExportGenerator } from "../example-generators/IndexExportGenerator";
-import { processArgs, ProcessedArgs } from "./processArgs";
+import { Schema } from "../../core";
+import { ProcessedArgs, processArgs } from "../../scripts/processArgs";
+import { IndexExportGenerator } from "../generators/IndexExportGenerator";
 
 let argLookup: ProcessedArgs;
 try {

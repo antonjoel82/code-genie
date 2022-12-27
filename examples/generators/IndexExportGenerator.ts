@@ -1,5 +1,5 @@
-import { Schema, ExecutionContext, ExecutionConfig } from "../core";
-import { TemplateGenerator } from "../template-generator/TemplateGenerator";
+import { Schema, ExecutionContext } from "../../core";
+import { TemplateGenerator } from "../../template-generator";
 
 export class IndexExportGenerator extends TemplateGenerator {
   constructor() {

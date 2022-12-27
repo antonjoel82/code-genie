@@ -3,13 +3,13 @@ import {
   ExecutionContext,
   FileNameGenerator,
   ExecutionConfig,
-} from "../core";
+} from "../../core";
 import {
   ProgrammingLanguage,
   ProgrammingLanguageToFileExtension,
-} from "../core/files";
-import { TemplateGenerator } from "../template-generator/TemplateGenerator";
-import { FirstParamType } from "../util";
+} from "../../core/files";
+import { TemplateGenerator } from "../../template-generator/TemplateGenerator";
+import { FirstParamType } from "../../util";
 
 export type TestScope = "integration" | "unit";
 const TestScopeToFileEnding: Record<TestScope, string> = {

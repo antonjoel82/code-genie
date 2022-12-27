@@ -1,53 +1,91 @@
 import { Schema, ExecutionContext, ExecutionConfig } from "../core/constructs";
-import { handleFileOutputDefault } from "./fileOutput";
+import { handleFileOutputDefault } from "./handleFileOutputDefault";
+
+type HydratedTemplate = string;
 
 export type ExecuteFunction = (
   schema: Schema,
-  context?: ExecutionContext
-) => void;
+  execCtx?: ExecutionContext
+) => HydratedTemplate;
 
 export type GenerateFunction = (
   schema: Schema,
   executionConfig?: ExecutionConfig,
-  context?: ExecutionContext
-) => string;
+  execCtx?: ExecutionContext
+) => HydratedTemplate;
 
 export type FileOutputHandler = (
   schema: Schema,
   executionConfig: ExecutionConfig,
-  template: string
+  template: HydratedTemplate
 ) => void;
 
 const mergeExecutionConfigWithContext = (
   executionConfig: ExecutionConfig,
-  context: ExecutionContext
+  execCtx: ExecutionContext
 ): ExecutionConfig => {
-  // console.log({ executionConfig, context });
+  // console.log({ executionConfig, execCtx });
   return {
     ...executionConfig,
     fileOptions: {
       ...executionConfig.fileOptions,
-      ...context.fileOptions,
+      ...execCtx.fileOptions,
     },
   };
 };
 
-export abstract class TemplateGenerator {
-  constructor(private readonly executionConfig: ExecutionConfig = {}) {}
+export abstract class TemplateGenerator<
+  TemplateConfig extends ExecutionConfig = ExecutionConfig
+> {
+  constructor(private readonly executionConfig: TemplateConfig) {}
 
+  /**
+   * @returns a string of the hydrated template.
+   */
   abstract generate: GenerateFunction;
 
+  protected validateExecutionArgs(
+    schema: Schema,
+    execCtx: ExecutionContext
+  ): string[] {
+    const errMsgs: string[] = [];
+    if (!schema.model) {
+      // TODO improve
+      errMsgs.push("Model required.");
+    }
+    return errMsgs;
+  }
+
   protected handleFileOutput: FileOutputHandler = handleFileOutputDefault;
-  execute: ExecuteFunction = (schema, context) => {
+
+  protected handleErrorMessages = (errMsgs: string[]) => {
+    errMsgs.forEach((msg) => console.error(msg));
+
+    return errMsgs.length > 0;
+  };
+
+  execute: ExecuteFunction = (schema, execCtx) => {
+    try {
+      if (
+        this.handleErrorMessages(this.validateExecutionArgs(schema, execCtx))
+      ) {
+        return;
+      }
+    } catch (err) {
+      console.error("An unknown validation error occurred!", err);
+    }
+
     const runtimeConfig = mergeExecutionConfigWithContext(
       this.executionConfig,
-      context
+      execCtx
     );
 
     console.log({ runtimeConfig });
 
-    const template = this.generate(schema, runtimeConfig, context);
+    const template = this.generate(schema, runtimeConfig, execCtx);
     this.handleFileOutput(schema, runtimeConfig, template);
+
+    return template;
   };
 }
 
